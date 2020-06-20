@@ -1,4 +1,4 @@
-import { Action, Context } from "moleculer";
+import { ActionSchema, Context } from "moleculer";
 import { isFunction } from "util";
 
 import {
@@ -9,10 +9,10 @@ import {
 import { getParamNames } from "./utils/parameters";
 
 export interface ActionOptions {
-    name?: Action["name"];
-    cache?: Action["cache"];
-    metrics?: Action["metrics"];
-    params?: Action["params"];
+    name?: ActionSchema["name"];
+    cache?: ActionSchema["cache"];
+    metrics?: ActionSchema["metrics"];
+    params?: ActionSchema["params"];
 }
 
 export function action(options?: ActionOptions): MethodDecorator {
@@ -28,7 +28,7 @@ export function action(options?: ActionOptions): MethodDecorator {
             if (!(opts.params || !params)) {
                 descriptor.value = ((ctx: Context) => {
                     const args = getParamNames(func).map((param) => {
-                        return ctx.params[param];
+                        return (ctx as any).params[param];
                     });
 
                     if (contextParam) {
